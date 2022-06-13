@@ -90,6 +90,36 @@ contract Staking is ReentrancyGuard, Ownable {
         rewardToken.safeTransfer(msg.sender, rewards);
     }
 
+    // function calculateReward(address _staker)
+    //     internal
+    //     view
+    //     returns (uint256 rewards)
+    // {
+    //     StakingInfo memory stakingInfo = stakingDetails[_staker];
+
+    //     if (block.timestamp - stakingInfo.stakedAt <= THREE_MONTHS) {
+    //         rewards = (stakingInfo.stakedTokens * 5) / 100;
+    //     }
+
+    //     if (
+    //         block.timestamp - stakingInfo.stakedAt > THREE_MONTHS &&
+    //         block.timestamp - stakingInfo.stakedAt <= SIX_MONTHS
+    //     ) {
+    //         rewards = (stakingInfo.stakedTokens * 10) / 100;
+    //     }
+
+    //     if (
+    //         block.timestamp - stakingInfo.stakedAt > SIX_MONTHS &&
+    //         block.timestamp - stakingInfo.stakedAt <= ONE_YEAR
+    //     ) {
+    //         rewards = (stakingInfo.stakedTokens * 15) / 100;
+    //     }
+
+    //     if (block.timestamp - stakingInfo.stakedAt > ONE_YEAR) {
+    //         rewards = (stakingInfo.stakedTokens * 15) / 100;
+    //     }
+    // }
+
     function calculateReward(address _staker)
         internal
         view
@@ -97,25 +127,21 @@ contract Staking is ReentrancyGuard, Ownable {
     {
         StakingInfo memory stakingInfo = stakingDetails[_staker];
 
-        if (block.timestamp - stakingInfo.stakedAt <= THREE_MONTHS) {
+        if (
+            block.timestamp - stakingInfo.stakedAt >= THREE_MONTHS &&
+            block.timestamp - stakingInfo.stakedAt < SIX_MONTHS
+        ) {
             rewards = (stakingInfo.stakedTokens * 5) / 100;
         }
 
         if (
-            block.timestamp - stakingInfo.stakedAt > THREE_MONTHS &&
-            block.timestamp - stakingInfo.stakedAt <= SIX_MONTHS
+            block.timestamp - stakingInfo.stakedAt >= SIX_MONTHS &&
+            block.timestamp - stakingInfo.stakedAt < ONE_YEAR
         ) {
             rewards = (stakingInfo.stakedTokens * 10) / 100;
         }
 
-        if (
-            block.timestamp - stakingInfo.stakedAt > SIX_MONTHS &&
-            block.timestamp - stakingInfo.stakedAt <= ONE_YEAR
-        ) {
-            rewards = (stakingInfo.stakedTokens * 15) / 100;
-        }
-
-        if (block.timestamp - stakingInfo.stakedAt > ONE_YEAR) {
+        if (block.timestamp - stakingInfo.stakedAt >= ONE_YEAR) {
             rewards = (stakingInfo.stakedTokens * 15) / 100;
         }
     }
